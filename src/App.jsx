@@ -28,7 +28,7 @@ const App = () => {
       const response = await openai.createChatCompletion({
         model: model,
         messages: [
-          { role: "system", content: `You will be provided with a sentence in English, and your task is to translate it into ${language}.` },
+          { role: "system", content: `You will be provided with a sentence in English, and your task is to translate it into ${language}.`},
           { role: "user", content: message },
         ],
         temperature: 0.3,
@@ -43,7 +43,7 @@ const App = () => {
       setIsLoading(false);
   
       // Send translation result to the backend
-      await fetch('http://localhost:5000/api/save-translation', { 
+      await fetch('https://translation-app-912s.onrender.com/api/save-translation', { 
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -151,21 +151,21 @@ const App = () => {
 
           <input
             type="radio"
-            id="italy"
+            id="german"
             name="language"
-            value="Italy"
+            value="german"
             onChange={handleInputChange}
           />
-          <label htmlFor="italy">Italy</label>
+          <label htmlFor="german">German</label>
 
           <input
             type="radio"
-            id="japanese"
+            id="italian"
             name="language"
-            value="Japanese"
+            value="italian"
             onChange={handleInputChange}
           />
-          <label htmlFor="japanese">Japanese</label>
+          <label htmlFor="italian">Italian</label>
         </div>
 
         <textarea
