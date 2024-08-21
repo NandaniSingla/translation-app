@@ -84,10 +84,10 @@ app.use(bodyParser.json());
 
 // Database connection
 const pool = new Pool({
-  user: "my_postgres_wbjo_user",
-  host: "dpg-cr2cjfqj1k6c73elr5lg-a",
-  database: "my_postgres_wbjo",
-  password: "2HKA3QBtiSjNWcRQwjjAh9sBwNo1RJAP",
+  user: "localhost",
+  host: "dpg-cqqhs32j1k6c73diloug-a",
+  database: "db_8bko",
+  password: "p2z2yyjog9J88gMkgb1riLQfigxVhN1U",
   port: 5432,
 });
 
