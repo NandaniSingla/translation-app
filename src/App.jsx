@@ -223,13 +223,13 @@ const App = () => {
 
           <input
             type="radio"
-            id="telugu"
+            id="german"
             name="language"
-            value="Telugu"
-            checked={formData.language === "Telugu"}
+            value="German"
+            checked={formData.language === "German"}
             onChange={handleInputChange}
           />
-          <label htmlFor="telugu">Telugu</label>
+          <label htmlFor="german">German</label>
 
           <input
             type="radio"
