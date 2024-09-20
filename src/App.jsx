@@ -477,7 +477,7 @@ const App = () => {
             checked={formData.model === "gemini-1.5-pro"}
             onChange={handleInputChange}
           />
-          <label htmlFor="gemini-1.5-pro">G-1.5 pro</label>
+          <label htmlFor="gemini-1.5-pro">Gemini-1.5 pro</label>
 
           <input
             type="radio"
@@ -487,7 +487,7 @@ const App = () => {
             checked={formData.model === "gemini-1.5-flash"}
             onChange={handleInputChange}
           />
-          <label htmlFor="gemini-1.5-flash">G-1.5 flash</label>
+          <label htmlFor="gemini-1.5-flash">Geminicd translatu-1.5 flash</label>
 
           <input
             type="radio"
