@@ -84,10 +84,10 @@ app.use(bodyParser.json());
 
 // Database connection
 const pool = new Pool({
-  user: "localhost",
-  host: "dpg-cqqhs32j1k6c73diloug-a",
-  database: "db_8bko",
-  password: "p2z2yyjog9J88gMkgb1riLQfigxVhN1U",
+  user: "translation_app_nc77_user",
+  host: "dpg-cro3r2d6l47c73an72q0-a",
+  database: "translation_app_nc77",
+  password: "nBia9zLEQU4vOLYVomJCHvJcMIv0h6ix",
   port: 5432,
 });
 
