@@ -1,28 +1,14 @@
 import React, { useState } from "react";
 import "./App.css";
-// import { translateWithGemini } from "./googleGeminiService"; // Import the function for Google Gemini translation
-import { Configuration, OpenAIApi } from "openai";
 import { BeatLoader } from "react-spinners";
 
-
-
 const App = () => {
-  const [formData, setFormData] = useState({ language: "Hindi", message: "" });
+  const [formData, setFormData] = useState({ language: "", message: "" });
   const [error, setError] = useState("");
   const [showNotification, setShowNotification] = useState(false);
   const [translation, setTranslation] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const [languageStats, setLanguageStats] = useState({});
-
-  // const apiKey = import.meta.env.VITE_OPENAI_KEY;
-  // if (!apiKey) {
-  //   console.error("API key is missing. Please set the VITE_OPENAI_KEY environment variable.");
-  // }
-
-  // const configuration = new Configuration({
-  //   apiKey: apiKey,
-  // });
-  // const openai = new OpenAIApi(configuration);
 
   const handleInputChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,16 +19,19 @@ const App = () => {
     setIsLoading(true);
 
     try {
-      const response = await fetch('https://backend-vaeh.onrender.com/translate', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(formData), // Send formData as JSON
-      });
+      const response = await fetch(
+        "https://translation-app-912s.onrender.com/api/translate",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(formData), // Send formData as JSON
+        }
+      );
 
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        throw new Error("Network response was not ok");
       }
 
       const data = await response.json();
@@ -91,126 +80,79 @@ const App = () => {
     }, 3000);
   };
 
+  const Languages = [
+    { label: "Bulgarian", value: "bg" },
+    { label: "Czech", value: "cs" },
+    { label: "Danish", value: "da" },
+    { label: "Dutch", value: "nl" },
+    { label: "English (American)", value: "en-US" },
+    { label: "English (British)", value: "en-GB" },
+    { label: "Estonian", value: "et" },
+    { label: "Finnish", value: "fi" },
+    { label: "French", value: "fr" },
+    { label: "German", value: "de" },
+    { label: "Greek", value: "el" },
+    { label: "Hungarian", value: "hu" },
+    { label: "Indonesian", value: "id" },
+    { label: "Italian", value: "it" },
+    { label: "Japanese", value: "ja" },
+    { label: "Korean", value: "ko" },
+    { label: "Latvian", value: "lv" },
+    { label: "Lithuanian", value: "lt" },
+    { label: "Polish", value: "pl" },
+    { label: "Portuguese (European)", value: "pt-PT" },
+    { label: "Portuguese (Brazilian)", value: "pt-BR" },
+    { label: "Romanian", value: "ro" },
+    { label: "Russian", value: "ru" },
+    { label: "Slovak", value: "sk" },
+    { label: "Slovenian", value: "sl" },
+    { label: "Spanish", value: "es" },
+    { label: "Swedish", value: "sv" },
+    { label: "Turkish", value: "tr" },
+    { label: "Ukrainian", value: "uk" },
+    { label: "Chinese (Simplified)", value: "zh" },
+    { label: "Hindi", value: "hi" }, // Add Hindi manually
+  ];
+  // Create a mapping for language names
+  const languageNames = Object.fromEntries(
+    Languages.map((lang) => [lang.value, lang.label])
+  );
 
   return (
     <div className="container">
       <h1>TRANSLATION</h1>
-
       <form onSubmit={handleOnSubmit}>
-        <div className="choices">
-          <input
-            type="radio"
-            id="hi"
+        <div className="dropdown">
+          <label htmlFor="language">Select Lang:</label>
+          <select
             name="language"
-            value="hi"
-            checked={formData.language === "hi"}
+            id="language"
+            value={formData.language}
             onChange={handleInputChange}
-          />
-          <label htmlFor="hi">Hindi</label>
-
-          <input
-            type="radio"
-            id="es"
-            name="language"
-            value="es"
-            checked={formData.language === "es"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="es">Spanish</label>
-
-          <input
-            type="radio"
-            id="ja"
-            name="language"
-            value="ja"
-            checked={formData.language === "ja"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="ja">Japanese</label>
-
-          <input
-            type="radio"
-            id="fr"
-            name="language"
-            value="fr"
-            defaultChecked={formData.language === "fr"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="fr">french</label>
-
-
-          <input
-            type="radio"
-            id="de"
-            name="language"
-            value="de"
-            checked={formData.language === "de"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="de">german</label>
+          >
+            {Languages.map((lang) => (
+              <option key={lang.value} value={lang.value}>
+                {lang.label}
+              </option>
+            ))}
+          </select>
         </div>
 
-        <div className="choices">
-          <input
-            type="radio"
-            id="gpt-3.5-turbo"
+        <div className="dropdown">
+          <label htmlFor="model">Select Model:</label>
+          <select
             name="model"
-            value="gpt-3.5-turbo"
-            checked={formData.model === "gpt-3.5-turbo"}
+            id="model"
+            value={formData.model}
             onChange={handleInputChange}
-          />
-          <label htmlFor="gpt-3.5-turbo"> GPT   3.5 T</label>
-
-          <input
-            type="radio"
-            id="gpt-4"
-            name="model"
-            value="gpt-4"
-            checked={formData.model === "gpt-4"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="gpt-4">GPT-4</label>
-
-          <input
-            type="radio"
-            id="gpt-4-turbo"
-            name="model"
-            value="gpt-4-turbo"
-            checked={formData.model === "gpt-4-turbo"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="gpt-4-turbo">GPT-4 T</label>
-
-          <input
-            type="radio"
-            id="gemini-1.5-pro"
-            name="model"
-            value="gemini-1.5-pro"
-            checked={formData.model === "gemini-1.5-pro"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="gemini-1.5-pro">Gemini-1.5 pro</label>
-
-          <input
-            type="radio"
-            id="gemini-1.5-flash"
-            name="model"
-            value="gemini-1.5-flash"
-            checked={formData.model === "g-1.5-flash"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="gemini-1.5-flash">Gemini-1.5 flash</label>
-
-          <input
-            type="radio"
-            id="deepl"
-            name="model"
-            value="deepl" 
-            checked={formData.model === "deepl"}
-            onChange={handleInputChange}
-          />
-          <label htmlFor="deepl">DeepL</label>
-
+          >
+            <option value="gpt-3.5-turbo">GPT-3.5 Turbo</option>
+            <option value="gpt-4">GPT-4</option>
+            <option value="gpt-4-turbo">GPT-4 Turbo</option>
+            <option value="gemini-1.5-pro">Gemini 1.5 Pro</option>
+            <option value="gemini-1.5-flash">Gemini 1.5 Flash</option>
+            <option value="deepl">DeepL</option>
+          </select>
         </div>
 
         <textarea
@@ -224,7 +166,6 @@ const App = () => {
 
         <button type="submit">Translate</button>
       </form>
-
       <div className="translation">
         <div className="copy-btn" onClick={handleCopy}>
           <svg
@@ -245,7 +186,19 @@ const App = () => {
         {isLoading ? <BeatLoader size={12} color={"red"} /> : translation}
       </div>
 
-
+      <div className="language-stats">
+        <h2>Language Stats</h2>
+        <ul>
+          {Object.entries(languageStats).map(([languageCode, count]) => (
+            <li key={languageCode}>
+              <span>
+                {languageNames[languageCode] || languageCode}: {count}{" "}
+                translations
+              </span>
+            </li>
+          ))}
+        </ul>
+      </div>
 
       <div className={`notification ${showNotification ? "active" : ""}`}>
         Copied to clipboard!
