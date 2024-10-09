@@ -1,33 +1,37 @@
-const express = require('express');
-const axios = require('axios');
-const bodyParser = require('body-parser');
-const cors = require('cors'); // Import cors
-const pool = require('./db'); // Import the PostgreSQL connection pool
-require('dotenv').config();
+const express = require("express");
+const axios = require("axios");
+const bodyParser = require("body-parser");
+const cors = require("cors"); // Import cors
+const pool = require("./db"); // Import the PostgreSQL connection pool
+require("dotenv").config();
 const { GoogleGenerativeAI } = require("@google/generative-ai");
 const app = express();
 const port = process.env.PORT || 5000;
 const deepl = require("deepl-node");
-const languageNames = require("./languages")
+const languageNames = require("./language");
 
 app.use(cors()); // Use cors middleware
 app.use(bodyParser.json());
 
-const deeplApiKey = process.env.VITE_DEEPL_KEY; // DeepL API key
+const deeplApiKey = process.env.VITE_DEEPL_API_KEY; // DeepL API key
 
 // google gemini code
-const apiKey = process.env.VITE_GEMINI_KEY; // Replace with your Gemini API key
+const apiKey = process.env.VITE_GOOGLE_API_KEY; // Replace with your Gemini API key
 const genAI = new GoogleGenerativeAI(apiKey);
 
 function getGenerativeModel(modelName) {
   switch (modelName) {
-    case 'gemini-1.5-flash':
-      return genAI.getGenerativeModel({ model: 'gemini-1.5-flash' });
-    case 'gemini-1.5-pro':
-      return genAI.getGenerativeModel({ model: 'gemini-1.5-pro' });
+    case "gemini-1.5-flash":
+      return genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    case "gemini-1.5-pro":
+      return genAI.getGenerativeModel({ model: "gemini-1.5-pro" });
+    case "gemini-1.5-pro-002":
+      return genAI.getGenerativeModel({ model: "gemini-1.5-pro-002" });
+    case "gemini-1.5-flash-002":
+      return genAI.getGenerativeModel({ model: "gemini-1.5-flash-002" });
     // Add other models as needed
     default:
-      throw new Error('Unsupported model');
+      throw new Error("Unsupported model");
   }
 }
 
@@ -39,47 +43,57 @@ async function translationText(text, targetLanguage, modelName) {
     const result = await model.generateContent(prompt);
     return result.response.text();
   } catch (error) {
-    console.error('Error in translationText:', error);
+    console.error("Error in translationText:", error);
     throw error;
   }
 }
 
 //code for deepl translation
-const translator = new deepl.Translator(deeplApiKey)
+const translator = new deepl.Translator(deeplApiKey);
 async function translationTextDeepL(text, targetLanguage) {
   try {
-    const result = await translator.translateText(text, null, targetLanguage.toUpperCase());
+    const result = await translator.translateText(
+      text,
+      null,
+      targetLanguage.toUpperCase()
+    );
     return result.text;
   } catch (error) {
-    console.error('Error in translationTextDeepL:', error.message || error);
-    throw new Error('Translation failed. Please try again later.');
+    console.error("Error in translationTextDeepL:", error.message || error);
+    throw new Error("Translation failed. Please try again later.");
   }
 }
 
-app.post('/translate', async (req, res) => {
-
+app.post("/translate", async (req, res) => {
   const { language, message, model } = req.body;
 
-  if (!process.env.OPENAI_API_KEY && !process.env.VITE_GEMINI_KEY && !process.env.VITE_DEEPL_KEY ) {
-    return res.status(500).json({ error: "API keys are missing. Please set the OPENAI_API_KEY and GOOGLE_GEMINI_API_KEY environment variables." });
+  if (
+    !process.env.VITE_OPENAI_KEY &&
+    !process.env.VITE_GOOGLE_API_KEY &&
+    !process.env.VITE_DEEPL_API_KEY
+  ) {
+    return res.status(500).json({
+      error:
+        "API keys are missing. Please set the OPENAI_API_KEY and GOOGLE_GEMINI_API_KEY environment variables.",
+    });
   }
 
   try {
     let translatedText;
     // calling gemini function here
-    if (model.startsWith('gemini')) {
+    if (model.startsWith("gemini")) {
       translatedText = await translationText(message, language, model); // Await the result
     }
 
-     // calling deepl function here
-    else if (model.startsWith('deepl')) {
+    // calling deepl function here
+    else if (model.startsWith("deepl")) {
       translatedText = await translationTextDeepL(message, language);
     }
-    
+
     // Translate using OpenAI
     else {
       const response = await axios.post(
-        'https://api.openai.com/v1/chat/completions',
+        "https://api.openai.com/v1/chat/completions",
         {
           model: model || "gpt-3.5-turbo",
           messages: [
@@ -100,9 +114,9 @@ app.post('/translate', async (req, res) => {
         },
         {
           headers: {
-            'Authorization': `Bearer ${process.env.OPENAI_API_KEY}`,
-            'Content-Type': 'application/json'
-          }
+            Authorization: `Bearer ${process.env.VITE_OPENAI_KEY}`,
+            "Content-Type": "application/json",
+          },
         }
       );
       translatedText = response.data.choices[0].message.content.trim(); // Extracting the translated text from OpenAI response
@@ -110,10 +124,9 @@ app.post('/translate', async (req, res) => {
 
     // Save the translation result to the database
     await pool.query(
-      'INSERT INTO translations (language, message, translated_text) VALUES ($1, $2, $3)',
-      [languageNames[language], message, translatedText]
+      "INSERT INTO translations (language, message, translated_text) VALUES ($1, $2, $3)",
+      [language, message, translatedText]
     );
-
 
     res.json({ translatedText });
   } catch (error) {
@@ -126,5 +139,5 @@ app.post('/translate', async (req, res) => {
 });
 
 app.listen(port, () => {
-  console.log(`Server is running on port ${port}`);
+  console.log(`Backend is running on port ${port}`);
 });
