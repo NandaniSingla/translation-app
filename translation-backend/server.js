@@ -11,13 +11,14 @@ app.use(cors());
 app.use(bodyParser.json());
 
 // Database connection
-// const pool = new Pool({
-//   user: "my_postgres_mda8_user",
-//   host: "dpg-cs30bn9u0jms7391lq5g-a",
-//   database: "my_postgres_mda8",
-//   password: "viFQtpBhnVhEwyB2XZh8qXtNPNrrauTj",
-//   port: 5432,
-// });
+const pool = new Pool({
+  user: "translation_app_nc77_user",
+  host: "dpg-cro3r2d6l47c73an72q0-a",
+  database: "translation_app_nc77",
+  password: "nBia9zLEQU4vOLYVomJCHvJcMIv0h6ix",
+  port: 5432,
+});
+module.exports = pool;
 
 // Function to create the table if it doesn't exist
 const createTableIfNotExists = async () => {
