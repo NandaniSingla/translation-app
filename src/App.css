@@ -1,97 +1,126 @@
-* {
-  font-family: "Inter", sans-serif;
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  background: #f3fae0;
-}
-
-
 h1 {
   font-size: 2.5em;
-  color: #ff6d63;
-  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+  color: #040413;
+  text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2); /* Softer shadow */
+  margin-bottom: 20px; /* Spacing below heading */
+  text-decoration: underline; /* Add underline to the heading */
 }
 
 .container {
-  max-width: 600px;
-  margin: 32px auto;
-  background: #fff;
-  padding: 16px 32px;
-  box-shadow: 0 4px 40px -8px rgba(0, 0, 0, 0.2);
+  max-width: auto; /* Adjusted to fit radio button size better */
+  margin: 40px auto;
+  background: #b4c29f;
+  padding: 32px; /* Spacious padding */
+  box-shadow: 0 8px 30px rgba(11, 199, 99, 0.1); /* Subtle shadow for depth */
   text-align: center;
+  border-radius: 16px; /* More rounded corners */
 }
 
 .container form {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 20px; /* Increased gap for better spacing */
+}
+
+.container .choices {
+button{
+  padding: 15px;
+  margin: 1px;
+  font-size: medium;
+
+}
+
+padding: 0px;
+  display: flex;
+  flex-direction: row;
+
+  justify-content: center; /* Center choices */
+  gap: 30px; /* Adjusted gap for better visibility */
+}
+
+.container form input[type="radio"] {
+  display: none; /* Hide the default radio button */
 }
 
 .container form label {
-  background: #a2ffbf;
+  background: #1ace2c;
   color: #022722;
-  height: 40px;
-  width: 100px;
+  height: 40px; /* Adjusted height for labels */
+  width: 130px; /* Width for labels */
   display: flex;
-  border-radius: 30px;
+  border-radius: 30px; /* Subtle rounding */
   align-items: center;
   justify-content: center;
   cursor: pointer;
+  transition: background 300ms, color 300ms;
+}
+
+.container form label:before {
+  content: ''; /* Create a custom radio button */
+  display: inline-block;
+  width: 16px; /* Smaller radio button size */
+  height: 16px; /* Smaller radio button size */
+  border: 2px solid #a2ffbf; /* Border color */
+  border-radius: 50%; /* Round shape */
+  margin-right: 10px; /* Spacing between button and label */
+  background: white; /* Background for the button */
+  transition: background 300ms;
+}
+
+.container form input[type="radio"]:checked + label:before {
+  background: #024712; /* Background color when checked */
 }
 
 .container form input[type="radio"]:checked + label {
   background: #024712;
-  color: #fff;
+  color: #ffffff;
   font-weight: bold;
-}
-
-.container .choices {
-  display: flex;
-  gap: 20px;
-}
-
-.container form input[type="radio"] {
-  display: none;
 }
 
 .container textarea {
   padding: 16px;
-  font-size: 20px;
-  height: 140px;
+  font-size: 18px;
+  height: 180px; /* Adjusted height for better visibility */
   resize: none;
-  line-height: 1.7;
+  line-height: 1.6;
   border: 1px solid #023047;
+  border-radius: 8px; /* Rounded corners */
 }
 
 .container button {
-  padding: 8px;
-  font-size: 20px;
+  padding: 16px 28px; /* Larger buttons */
+  font-size: 20px; /* Slightly larger font size */
   border: none;
+  border-radius: 8px; /* Rounded corners */
   background: #e63946;
-  color: #fff;
+  color: #ffffff;
   cursor: pointer;
+  transition: background 300ms, transform 300ms; /* Smooth transitions */
+}
+
+.container button:hover {
+  background: #d62839; /* Darker shade on hover */
+  transform: translateY(-2px); /* Lift effect on hover */
 }
 
 .translation {
-  padding: 12px 32px;
+  padding: 20px; /* Increased padding */
   background: #edf2f4;
   margin-top: 20px;
-  font-size: 20px;
-  line-height: 1.7;
-  height: 140px;
-  overflow-y: scroll;
+  font-size: 18px;
+  line-height: 1.6;
+  height: 220px; /* Increased height for better visibility */
+  overflow-y: auto;
   position: relative;
+  border-radius: 8px; /* Rounded corners */
 }
 
 .translation .copy-btn {
   position: absolute;
-  width: 20px;
+  width: 28px; /* Slightly larger button */
   top: 12px;
   right: 12px;
-  opacity: 0.7;
+  opacity: 0.9; /* More opaque */
   cursor: pointer;
 }
 
@@ -101,8 +130,8 @@ h1 {
   left: 50%;
   transform: translate(-50%, 100px);
   background: #023047;
-  color: #fff;
-  padding: 12px 24px;
+  color: #ffffff;
+  padding: 16px 32px; /* Increased padding */
   border-radius: 30px;
   transition: all 400ms ease;
 }
@@ -112,5 +141,6 @@ h1 {
 }
 
 .error {
-  color: rgb(226, 13, 13);
+  color: rgb(134, 226, 13);
+  font-weight: bold; /* Make errors more noticeable */
 }
